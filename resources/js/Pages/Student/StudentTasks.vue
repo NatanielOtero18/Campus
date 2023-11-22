@@ -1,0 +1,4 @@
+<template>
+
+    Student tasks
+</template>
