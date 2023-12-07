@@ -24,6 +24,7 @@ const pendingCorrection = computed(() => {
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
 
                     <div class="p-4 grid grid-cols-3 text-gray-900">
+                        <div v-if="pendingCorrection.length == 0">No hay actividades pendietes de corrección...</div>
                         <div class="flex flex-col p-4  justify-items-center" v-for="item in pendingCorrection">
                           <h3 class="font-bold text-xl ">  Actvity: {{ item.id }} - {{ item.title }} :</h3>
                            

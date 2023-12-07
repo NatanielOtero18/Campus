@@ -23,6 +23,7 @@ const form = useForm({
 const submit = () => {
    
    form.patch(route('CorrectActivity',activity.id), {
+    preserveState:false,
        onFinish: () => {
            flash('Correccion realizada!', 'Se corrigio la actividad', 'success'),
            form.reset('score', 'correct')         

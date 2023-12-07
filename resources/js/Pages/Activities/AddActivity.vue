@@ -24,6 +24,7 @@ const form = useForm({
 const submit = () => {
    
     form.post(route('AddActivity'), {
+        preserveState:false,
         onFinish: () => {
             flash('Activity Creada!', 'Se creo correctamente la actividad', 'success'),
             form.reset('title', 'body')         

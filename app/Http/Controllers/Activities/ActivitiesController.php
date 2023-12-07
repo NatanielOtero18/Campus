@@ -7,6 +7,7 @@ use App\Models\Activity;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class ActivitiesController extends Controller
@@ -78,13 +79,15 @@ class ActivitiesController extends Controller
     }
     public function storeCorrection(Activity $activity, Request $request)
     {
+
         $student = Student::find($request->only(['studentID']))->first();
         $atts = $request->validate([
             'score' => ['required', 'numeric','min:1','max:10'],
             'devolution' => ['required','string'],
         ]);
+       
         $student->activities()->updateExistingPivot($activity->id, [...$atts, 'corrected' => true]);
-      
+        return Inertia::location(route('CheckActivities',$student->user->id));
     }
 
 }

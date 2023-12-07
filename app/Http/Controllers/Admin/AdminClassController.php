@@ -22,7 +22,7 @@ class AdminClassController extends Controller
                     'quota' => $cls->quota,
                     'students_count' => $cls->students_count,
                     'teacher_id' => $cls->teacher?->user->id,
-                    'teacher_name' => $cls->teacher?->user->name,
+                    'teacher_name' => $cls->teacher?->name,
                     'contact_email' => $cls->teacher?->contact_email
                 ])
 

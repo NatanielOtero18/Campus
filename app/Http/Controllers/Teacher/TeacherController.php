@@ -28,7 +28,7 @@ class TeacherController extends Controller
                 ->where('role_type', 'like', '%' . 'Student')
                 ->whereRelation('role', 'classroom_id', '=', $teacher->classroom->id)
                 ->when($request->input('search'), function ($query, $search) {
-                    $query->whereRelation('role','name', 'like', '%' . $search . '%');
+                    $query->whereRelation('role', 'name', 'like', '%' . $search . '%');
 
                 })
                 ->paginate(10)
@@ -46,10 +46,11 @@ class TeacherController extends Controller
             'query' => $request->only(['search']),
         ]);
     }
-   
-    public function tasks(){
-        return Inertia::render('Teacher/TeacherTasks',[
-            'pending' => Activity::with('pendingCorrection')->where('teacher_id','like',auth()->user()->role->id)->get()
+
+    public function tasks()
+    {
+        return Inertia::render('Teacher/TeacherTasks', [
+            'pending' => Activity::with('pendingCorrection')->where('teacher_id', 'like', auth()->user()->role->id)->get()
         ]);
     }
     public function assingActivity(User $user, Request $request)
@@ -57,13 +58,16 @@ class TeacherController extends Controller
         $act = $request['activity'];
         $activity = Activity::find($act['id']);
         $student = Student::find($user->role->id);
-        $student->activities()->syncWithoutDetaching()($activity,['created_at' => Carbon::now(),'updated_at'=> Carbon::now()]);
+        $student->activities()->attach($activity, ['created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
     }
-    public function assingAll(Classroom $classroom , Request $request){
-        $act = $request['activity'];       
+    public function assingAll(Classroom $classroom, Request $request)
+    {
+        $act = $request['activity'];
         $activity = Activity::find($act['id']);
-        foreach ($classroom->students as $stu) {          
-           $stu->activities()->syncWithoutDetaching()($activity,['created_at'=> Carbon::now(),'updated_at'=> Carbon::now()]);
+        foreach ($classroom->students as $stu) {
+            if ($stu->membership == 1) {
+                $stu->activities()->attach($activity, ['created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
+            }
         }
 
     }

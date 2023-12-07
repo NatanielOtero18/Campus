@@ -25,6 +25,7 @@ const form = useForm({
 const submit = () => {
     console.log(form)
     form.patch(route('UpdateAcitvity', activity.id), {
+        preserveState:false,
         onFinish: () => {
             flash('Activity modificada!', 'Se modifico la actividad Nº' + activity.id, 'success')                    
         }

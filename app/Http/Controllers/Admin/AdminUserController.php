@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Classroom;
+use App\Models\Message;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\User;
@@ -27,6 +28,7 @@ class AdminUserController extends Controller
                 ->paginate(10)
                 ->through(fn($user) => [
                     'id' => $user->id,
+                    'username' => $user->username,
                     'name' => $user->role->name,
                     'role' => 'Student',
                     'email' => $user->email,
@@ -47,6 +49,7 @@ class AdminUserController extends Controller
                 ->withQueryString()
                 ->through(fn($user) => [
                     'id' => $user->id,
+                    'username' => $user->username,
                     'name' => $user->role->name,
                     'email' => $user->email,
                     'role' => 'Teacher',
@@ -64,10 +67,7 @@ class AdminUserController extends Controller
         ]);
     }
 
-    public function tasks()
-    {
-        return Inertia::render('Admin/AdminTasks');
-    }
+    
     public function storeStudent(Request $request)
     {
         $usAtt = $request->validate([

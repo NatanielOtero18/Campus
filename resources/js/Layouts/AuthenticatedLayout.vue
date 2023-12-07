@@ -26,16 +26,23 @@ const showingNavigationDropdown = ref(false);
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link v-if="$page.props.auth.user.isAdmin" :href="route('AdminTasks')">
-                                <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800" />
-                                </Link>
-                                <Link v-if="$page.props.auth.user.role_type.includes('Teacher')"
-                                    :href="route('TeacherTasks')">
-                                <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800" />
-                                </Link>
-                                <Link v-if="$page.props.auth.user.role_type.includes('Student')" :href="route('dashboard')">
-                                <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800" />
-                                </Link>
+                                <div v-if="$page.props.auth.user.isAdmin">
+                                    <Link :href="route('AdminTasks')">
+                                    <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800" />
+                                    </Link>
+                                </div>
+                                <div v-else>
+                                    <Link v-if="$page.props.auth.user.role_type.includes('Teacher')"
+                                        :href="route('TeacherTasks')">
+                                    <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800" />
+                                    </Link>
+                                    <Link v-if="$page.props.auth.user.role_type.includes('Student')"
+                                        :href="route('dashboard')">
+                                    <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800" />
+                                    </Link>
+                                </div>
+
+
                             </div>
 
                             <!-- Navigation Links -->
@@ -61,6 +68,9 @@ const showingNavigationDropdown = ref(false);
                                     :active="route().current('AdminPanel') || route().current('AdminClasrooms')">
                                     Admin Panel
                                 </NavLink>
+                                <NavLink :href="route('AdminTickets')" :active="route().current('AdminTickets')">
+                                    Tickets
+                                </NavLink>
                             </div>
                             <div v-else class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex justify-center items-center">
                                 <div v-if="user.role_type.includes('Teacher')" class="flex justify-between items-center">
@@ -79,6 +89,7 @@ const showingNavigationDropdown = ref(false);
                                 <div v-else>
 
                                 </div>
+                                
 
                             </div>
                         </div>
@@ -86,6 +97,7 @@ const showingNavigationDropdown = ref(false);
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
                             <!-- Settings Dropdown -->
                             <div class="ml-3 relative">
+
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
                                         <span class="inline-flex rounded-md">
@@ -104,7 +116,10 @@ const showingNavigationDropdown = ref(false);
                                     </template>
 
                                     <template #content>
-                                        <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
+
+                                        <DropdownLink :href="route('profile.edit')"> Perfil </DropdownLink>
+                                        <DropdownLink v-if="$page.props.auth.user.isAdmin == false"
+                                            :href="route('MessageAdmin')"> Contactar Admin </DropdownLink>
                                         <DropdownLink :href="route('logout')" method="post" as="button">
                                             Log Out
                                         </DropdownLink>
@@ -164,15 +179,18 @@ const showingNavigationDropdown = ref(false);
             <!-- Page Heading -->
             <header class="bg-white shadow" v-if="$slots.header">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    <div class="flex items-center justify-between">
-                        <slot name="header" />
-                        <PrimaryButton @click="back" class="rounded-full flex"><svg class="w-5 h-5 rtl:rotate-180" xmlns="http://www.w3.org/2000/svg"
-                                fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <div class="flex items-center gap-4">
+                        <button @click="back" class="rounded-full flex justify-between">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />                                    
-                            </svg>
-                            Go Back
-                        </PrimaryButton>
+                                    d="M11.25 9l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+
+                               
+                        </button>
+                        <slot name="header" />
+                       
                     </div>
                 </div>
             </header>

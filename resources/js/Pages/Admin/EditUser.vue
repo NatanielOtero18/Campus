@@ -26,7 +26,7 @@ let props = defineProps({
 const classrooms = computed(()=> page.props.classrooms)
 
 const form = useForm({
-    name: props.user.role.name,
+    name: props.user.name,
     email: props.user.email,   
     classroom_id: props.user.classroom_id,
     membership: props.user.membership,

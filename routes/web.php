@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\Activities\ActivitiesController;
 use App\Http\Controllers\Admin\AdminClassController;
+use App\Http\Controllers\Admin\AdminTicketsController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Clasroom\ClassroomController;
+
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Teacher\TeacherController;
 use Illuminate\Foundation\Application;
@@ -43,7 +45,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
 });
+
+Route::middleware('auth')->group(function (){
+    Route::get('/sendTicket',[AdminTicketsController::class,'createTicket'])->name('MessageAdmin');
+    Route::post('/storeTicket',[AdminTicketsController::class,'storeTicket'])->name('SendTicket');
+});
+
 
 Route::middleware('isAdmin')->group(function () {
     Route::get('/adminTasks', [AdminUserController::class, 'tasks'])->name('AdminTasks');
@@ -61,6 +70,8 @@ Route::middleware('isAdmin')->group(function () {
     Route::patch('/classUpdate/{classroom:id}', [AdminClassController::class, 'updateClassroom'])->name('UpdateClassroom');
     Route::delete('/unassignTeacher/{classroom:id}', [AdminClassController::class, 'unassignTeacher'])->name('UnTeacher');
     Route::patch('/assignTeacher/{classroom:id}', [AdminClassController::class, 'assignTeacher'])->name('AsTeacher');
+
+    Route::get('/adminTickets',[AdminTicketsController::class,'index'])->name('AdminTickets');
 });
 
 Route::middleware('isTeacher')->group(

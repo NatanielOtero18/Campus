@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('message_user', function (Blueprint $table) {
+        Schema::create('tickets', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('message_id');
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('sender_id')->references('id')->on('users');
+            $table->text('subject');
+            $table->text('content');
             $table->boolean('solved')->default(false);
             $table->timestamps();
         });
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('message_user');
+        Schema::dropIfExists('tickets');
     }
 };

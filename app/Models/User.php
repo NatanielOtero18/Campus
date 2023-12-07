@@ -5,11 +5,13 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
+use PHPUnit\Framework\Attributes\Ticket;
 
 class User extends Authenticatable
 {
@@ -28,9 +30,9 @@ class User extends Authenticatable
     {
         return $this->morphTo();
     }
-    public function messages() : BelongsToMany
+    public function tickets(): HasMany
     {
-        return $this->belongsToMany(Messages::class);
+        return $this->hasMany(Ticket::class);
     }
     public function setPasswordAttribute($password){
         //Eloquent mutator modifica cualquier att que este en el formato set*Attribute
