@@ -15,10 +15,30 @@ defineProps({
         type: String,
     },
 });
+const quickLogin = (type) => {
+    switch (type) {
+        case 'admin':
+            form.email = 'Admin@admin.com'
+            form.password = '12345678'
+            break;
+        case 'stu':
+            form.email = 'Student1@student.com'
+            form.password = '123456'
+            break;
+        case 'tea':
+            form.email = 'Teacher1@teacher.com'
+            form.password = '123456'
+            break;
 
+        default:
+            form.email = 'Admin@admin.com'
+            form.password = '12345678'
+            break;
+    }
+}
 const form = useForm({
     email: '',
-    password: '',   
+    password: '',
 });
 
 const submit = () => {
@@ -30,6 +50,7 @@ const submit = () => {
 
 <template>
     <GuestLayout>
+
         <Head title="Log in" />
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
@@ -40,15 +61,8 @@ const submit = () => {
             <div>
                 <InputLabel for="email" value="Email" />
 
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autofocus
-                    autocomplete="email"
-                />
+                <TextInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus
+                    autocomplete="email" />
 
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
@@ -56,14 +70,8 @@ const submit = () => {
             <div class="mt-4">
                 <InputLabel for="password" value="Contraseña" />
 
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="current-password"
-                />
+                <TextInput id="password" type="password" class="mt-1 block w-full" v-model="form.password" required
+                    autocomplete="current-password" />
 
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
@@ -76,13 +84,30 @@ const submit = () => {
             </div> -->
 
             <div class="flex items-center justify-end mt-4">
-                
 
-                <PrimaryButton class="w-full flex justify-center" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+
+                <PrimaryButton class="w-full flex justify-center" :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing">
                     Iniciar sesión
                 </PrimaryButton>
+
             </div>
         </form>
+        <div class="flex justify-between mt-2 gap-2">
+
+            <PrimaryButton @click="quickLogin('admin')" class="w-full flex justify-center" :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing">
+                Admin
+            </PrimaryButton>
+            <PrimaryButton @click="quickLogin('tea')"  class=" w-full  flex justify-center" :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing">
+                Teacher
+            </PrimaryButton>
+            <PrimaryButton @click="quickLogin('stu')"  class=" w-full  flex justify-center" :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing">
+                Student
+            </PrimaryButton>
+        </div>
     </GuestLayout>
 </template>
 
