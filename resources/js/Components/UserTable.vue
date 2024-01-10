@@ -58,8 +58,8 @@ let homework = (user) => {
     if (user.membership == 1) {
         showHM.value = true
         selectedUser.value = user
-    }else{
-        flash('Error, Estudiante Inactivo','El estudiante no se encuentra activo en el sistema','error')
+    } else {
+        flash('Error, Estudiante Inactivo', 'El estudiante no se encuentra activo en el sistema', 'error')
     }
 }
 
@@ -102,7 +102,8 @@ const isAdmin = computed(() => { return user.isAdmin == 1 })
                         <!-- :href="route('EditUser',user.id)" -->
                     </div>
                     <div v-if="isTeacher" class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-                        <Button @click="homework(user)" class="text-sm leading-6 text-blue-500" :class="{'disabled':user.membership == 0}">Asignar tarea </Button>
+                        <Button @click="homework(user)" class="text-sm leading-6 text-blue-500"
+                            :class="{ 'disabled': user.membership == 0 }">Asignar tarea </Button>
                         <!-- :href="route('EditUser',user.id)" -->
                     </div>
                     <div v-if="isTeacher" class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
@@ -149,4 +150,5 @@ const isAdmin = computed(() => { return user.isAdmin == 1 })
                 </div>
             </div>
         </div>
-</Modal></template>
+    </Modal>
+</template>

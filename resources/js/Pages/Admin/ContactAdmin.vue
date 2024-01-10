@@ -15,8 +15,7 @@ const page = usePage();
 
 const form = useForm({
     subject: '',
-    content: '',
-    sender_id: page.props.auth.user.id,
+    content: ''   
 })
 
 const submit = () => {

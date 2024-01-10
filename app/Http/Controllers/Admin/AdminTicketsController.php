@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Admin\Tickets;
+use App\Models\Tickets;
 use App\Models\User;
 use Carbon\Carbon;
+use Cmgmyr\Messenger\Models\Message;
+use Cmgmyr\Messenger\Models\Participant;
+use Cmgmyr\Messenger\Models\Thread;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -15,24 +18,21 @@ class AdminTicketsController extends Controller
     public function index(Request $request){
         
         return Inertia::render('Admin/AdminTickets',[
-            'tickets' => Tickets::all()
-        //     ->when($request->input('search'), function ($query, $search) {
-        //         $query->where('subject', 'like', '%' . $search . '%');
-        //         $query->orWhere('content', 'like', '%' . $search . '%');
+            'tickets' => Tickets::
+            when($request->input('search'), function ($query, $search) {
+                $query->where('subject', 'like', '%' . $search . '%');
+                $query->orWhere('content', 'like', '%' . $search . '%');
+                $query->orWhereRelation('user.role','name','like', '%' . $search . '%');
 
-        //     })
-        //     ->orderBy('pivot_solved')
-        //     ->get()
-        //     ->map(fn($message)=>[
-        //         'id' => $message->id,
-        //         'subject' => $message->subject,
-        //         'content' => $message->content,
-        //         'sender' => User::find($message->sender_id),
-        //         'created_at' => $message->created_at,
-        //         'updated_at' => $message->updated_at,
-        //         'solved' => $message->receiver->solved
-        //     ]            
-        //    )
+            })
+            ->orderBy('solved')
+            ->get()                 
+           
+        ]);
+    }
+    public function tasks(){
+        return Inertia::render('Admin/AdminTasks',[
+            'tickets' => Tickets::where('solved', false)->get()
         ]);
     }
     public function createTicket(){
@@ -40,13 +40,45 @@ class AdminTicketsController extends Controller
     }
 
     public function storeTicket(Request $request){
+
+
         $att = $request->validate([
             'subject' => ['required', 'max:255'],
-            'content' => ['required'],
-            'sender_id' => ['required', 'exists:users,id'],
-        ]);         
+            'content' => ['required']         
+        ]);  
+        
+       
+        $thread = Thread::create([
+            'subject' => "Ticket-" . $att['subject']
+        ]);
+        $att['user_id'] =  auth()->user()->id;
+        $att['thread_id'] = $thread->id;
+        Participant::create([
+            'thread_id' => $thread->id,
+            'user_id' => auth()->user()->id,
+            'last_read' => new Carbon(),
+        ]);
 
-        $message = Tickets::create($att);       
+        Tickets::create($att);       
         
     }
+
+    public function solveTicket(Tickets $ticket)
+    {
+        return Inertia::render('Admin/SolveTicket',[
+            'ticket' => $ticket,
+            'thread' => Thread::with(['messages' => function($query){
+                $query->orderBy('updated_at','desc');
+            }])->where('id','like',$ticket->thread->id)->first()
+            
+        ]);
+    }
+
+    public function setTicketSolved(Tickets $ticket)
+    {
+        $ticket->solved = true;
+        $ticket->save();
+    }
+
+    
 }

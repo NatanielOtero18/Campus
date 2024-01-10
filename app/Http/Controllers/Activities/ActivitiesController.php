@@ -7,6 +7,7 @@ use App\Models\Activity;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
@@ -88,6 +89,16 @@ class ActivitiesController extends Controller
        
         $student->activities()->updateExistingPivot($activity->id, [...$atts, 'corrected' => true]);
         return Inertia::location(route('CheckActivities',$student->user->id));
+    }
+
+    public function completeActivity(Activity $activity, Request $request)
+    {
+        $student = Student::find(auth()->user()->role_id)->first();
+        $att = $request->validate([
+            'resp' => ['required']
+        ]);
+
+        $student->activities()->updateExistingPivot($activity->id,['submit' => $att['resp'],'completed' => true,'updated_at' => Carbon::now()]);
     }
 
 }

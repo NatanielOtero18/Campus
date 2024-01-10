@@ -16,47 +16,52 @@ defineProps({
 });
 </script>
 
+
 <template>
     <Head title="Welcome" />
 
     <div
         class="relative sm:flex sm:justify-center sm:items-center sm:flex-col min-h-screen bg-dots-darker bg-center bg-gray-100 selection:bg-red-500 selection:text-white">
 
-        <div class="max-w-7xl mx-auto p-6 lg:p-8">
-            <div class="flex justify-center">
-                <img src="/assets/MClogo.svg" width="450" height="400" alt="">
+        <div transition-style="in:wipe:cinematic" class="sm:flex sm:justify-center sm:items-center sm:flex-col">
 
-            </div>
-        </div>
-        <div v-if="canLogin" class="text-2xl">
-            <div v-if="$page.props.auth.user">
-                <div v-if="$page.props.auth.user.isAdmin">
-                    <Link :href="route('AdminTasks')"
-                        class="font-semibold text-gray-600 hover:text-gray-900 hover:underline focus:outline focus:outline-2 focus:rounded-sm focus:outline-gray-400">
-                    Continuar</Link>
-                </div>
-                <div v-else>
-                    <Link v-if="$page.props.auth.user.role_type.includes('Teacher')" :href="route('TeacherTasks')"
-                        class="font-semibold text-gray-600 hover:text-gray-900 hover:underline focus:outline focus:outline-2 focus:rounded-sm focus:outline-gray-400">
-                    Continuar</Link>
-                    <Link v-else :href="route('dashboard')"
-                        class="font-semibold text-gray-600 hover:text-gray-900 hover:underline focus:outline focus:outline-2 focus:rounded-sm focus:outline-gray-400">
-                    Continuar</Link>
+
+            <div class="max-w-7xl mx-auto p-6 lg:p-8">
+                <div class="flex justify-center">
+                    <img src="/assets/MClogo.svg" width="450" height="400" alt="">
+
                 </div>
             </div>
-            <Link v-else :href="route('login')"
-                class="font-semibold text-gray-600 hover:text-gray-900 hover:underline focus:outline focus:outline-2 focus:rounded-sm focus:outline-gray-400">
-            Iniciar sesión</Link>
+
+            <div v-if="canLogin" class="text-2xl">
+                <div v-if="$page.props.auth.user">
+                    <div v-if="$page.props.auth.user.isAdmin">
+                        <Link :href="route('AdminTasks')"
+                            class="font-semibold text-gray-600 hover:text-gray-900 hover:underline focus:outline focus:outline-2 focus:rounded-sm focus:outline-gray-400">
+                        Continuar</Link>
+                    </div>
+                    <div v-else>
+                        <Link v-if="$page.props.auth.user.role_type.includes('Teacher')" :href="route('TeacherTasks')"
+                            class="font-semibold text-gray-600 hover:text-gray-900 hover:underline focus:outline focus:outline-2 focus:rounded-sm focus:outline-gray-400">
+                        Continuar</Link>
+                        <Link v-else :href="route('dashboard')"
+                            class="font-semibold text-gray-600 hover:text-gray-900 hover:underline focus:outline focus:outline-2 focus:rounded-sm focus:outline-gray-400">
+                        Continuar</Link>
+                    </div>
+                </div>
+                <Link v-else :href="route('login')"
+                    class="font-semibold text-gray-600 hover:text-gray-900 hover:underline focus:outline focus:outline-2 focus:rounded-sm focus:outline-gray-400">
+                Iniciar sesión</Link>
+
+            </div>
+
+
+
+            <Link v-else :href="route('dashboard')"
+                class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">
+            Dashboard</Link>
 
         </div>
-
-
-
-        <Link v-else :href="route('dashboard')"
-            class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">
-        Dashboard</Link>
-
-
 
 
 

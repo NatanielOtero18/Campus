@@ -27,7 +27,7 @@ let props = defineProps({
 })
 console.log(props.user)
 const form = useForm({    
-    name: props.user.role.name,
+    name: props.user.name,
     email: props.user.email,
     classroom_id: props.user.classroom_id,
     contact_email: props.user.contact_email,

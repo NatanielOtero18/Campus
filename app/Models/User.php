@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Cmgmyr\Messenger\Traits\Messagable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,11 +13,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
-use PHPUnit\Framework\Attributes\Ticket;
+
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Messagable;
 
     /**
      * The attributes that are mass assignable.
@@ -32,7 +34,12 @@ class User extends Authenticatable
     }
     public function tickets(): HasMany
     {
-        return $this->hasMany(Ticket::class);
+        return $this->hasMany(Tickets::class);
+    }
+
+    public function classMessages():HasMany
+    {
+        return $this->hasMany(ClassroomMessage::class);
     }
     public function setPasswordAttribute($password){
         //Eloquent mutator modifica cualquier att que este en el formato set*Attribute

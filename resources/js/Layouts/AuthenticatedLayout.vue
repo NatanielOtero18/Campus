@@ -8,11 +8,14 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import { Link, usePage } from '@inertiajs/vue3';
 
+
 const back = () => {
     window.history.back()
 }
 
 let user = usePage().props.auth.user
+let unreadCount = usePage().props.unread
+
 const showingNavigationDropdown = ref(false);
 </script>
 
@@ -23,7 +26,7 @@ const showingNavigationDropdown = ref(false);
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
-                        <div class="flex">
+                        <div class="flex gap-8">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
                                 <div v-if="$page.props.auth.user.isAdmin">
@@ -46,7 +49,7 @@ const showingNavigationDropdown = ref(false);
                             </div>
 
                             <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex justify-center items-center">
+                            <div class="hidden sm:-my-px sm:flex justify-center items-center">
                                 <NavLink v-if="user.isAdmin" :href="route('AdminTasks')"
                                     :active="route().current('AdminTasks')">
                                     Home
@@ -63,7 +66,7 @@ const showingNavigationDropdown = ref(false);
                                 </div>
                             </div>
                             <div v-if="user.isAdmin"
-                                class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex justify-center items-center">
+                                class="hidden sm:-my-px  sm:flex justify-center gap-8 items-center">
                                 <NavLink :href="route('AdminPanel')"
                                     :active="route().current('AdminPanel') || route().current('AdminClasrooms')">
                                     Admin Panel
@@ -72,26 +75,41 @@ const showingNavigationDropdown = ref(false);
                                     Tickets
                                 </NavLink>
                             </div>
-                            <div v-else class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex justify-center items-center">
-                                <div v-if="user.role_type.includes('Teacher')" class="flex justify-between items-center">
+                            <div v-else class="hidden sm:-my-px gap-8  sm:flex justify-center items-center">
+                                <div v-if="user.role_type.includes('Teacher')" class="flex justify-between items-center gap-6">
 
                                     <NavLink :href="route('TeacherClassroom')"
                                         :active="route().current('TeacherClassroom')">
                                         My Classroom
                                     </NavLink>
 
-                                    <NavLink class="ml-8" :href="route('TeacherActivities')"
+                                    <NavLink :href="route('TeacherActivities')"
                                         :active="route().current('TeacherActivities')">
                                         My Activities
                                     </NavLink>
 
                                 </div>
-                                <div v-else>
+                                <div v-else  class="flex justify-between items-center gap-6">
+                                    <NavLink :href="route('StudentClassroom')"
+                                        :active="route().current('StudentClassroom')">
+                                        My Classroom
+                                    </NavLink>
 
-                                </div>
-                                
+                                    <NavLink  :href="route('activities')"
+                                        :active="route().current('activities')">
+                                        My Activities
+                                    </NavLink>
+                                </div>                             
 
                             </div>
+                            <div class="hidden space-x-8 sm:-my-px gap-8  sm:flex justify-center items-center">
+                                    <NavLink class="notification" :href="route('ListThreads')"
+                                        :active="route().current('ListThreads')">
+                                        <!-- <p :class="{'text-red-300':unreadCount === 0}">My Messages</p> -->
+                                        <span>My Messages</span>
+                                        <span v-if="unreadCount > 0" class="badge" :class="'text-white bg-red-400 px-2 py-0.5'" >{{ unreadCount }}</span>
+                                    </NavLink>
+                                </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -178,19 +196,19 @@ const showingNavigationDropdown = ref(false);
 
             <!-- Page Heading -->
             <header class="bg-white shadow" v-if="$slots.header">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
                     <div class="flex items-center gap-4">
-                        <button @click="back" class="rounded-full flex justify-between">
+                        <button @click="back" class="rounded-full flex justify-between items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M11.25 9l-3 3m0 0l3 3m-3-3h7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
+                            </svg>
 
-                               
+
                         </button>
                         <slot name="header" />
-                       
+
                     </div>
                 </div>
             </header>
@@ -200,4 +218,25 @@ const showingNavigationDropdown = ref(false);
                 <slot />
             </main>
         </div>
-    </div></template>
+    </div>
+</template>
+<style>
+.notification {
+   
+  
+    text-decoration: none;
+    
+    position: relative;
+    display: inline-block;
+    border-radius: 2px;
+}
+
+
+ .badge {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    border-radius: 50%;
+    
+}
+</style>

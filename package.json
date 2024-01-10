@@ -23,6 +23,7 @@
         "@heroicons/vue": "^2.0.18",
         "lodash": "^4.17.21",
         "lodash.debounce": "^4.0.8",
-        "sweetalert": "^2.1.2"
+        "sweetalert": "^2.1.2",
+        "transition-style": "^0.1.3"
     }
 }

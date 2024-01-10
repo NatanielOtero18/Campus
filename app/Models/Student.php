@@ -32,4 +32,12 @@ class Student extends Model
         ->withPivot('completed','score','submit','devolution');
         
     }
+    public function CorrectedActivities(){
+        return $this->activities()
+        ->wherePivot('corrected',true);
+    }
+    public function PendingActivities(){
+        return $this->activities()
+        ->wherePivot('completed',false);
+    }
 }

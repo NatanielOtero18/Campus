@@ -5,8 +5,9 @@ use App\Http\Controllers\Admin\AdminClassController;
 use App\Http\Controllers\Admin\AdminTicketsController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Clasroom\ClassroomController;
-
+use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Teacher\TeacherController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -33,9 +34,11 @@ Route::get('/', function () {
 })->name('Home');
 
 Route::middleware('isStudent')->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard',[StudentController::class,'index'])->name('dashboard');
+    Route::get('/myClassroom',[StudentController::class,'classroom'])->name('StudentClassroom');
+    Route::get('/myActivities',[StudentController::class,'indexActivities'])->name('activities');
+    Route::get('/showActivities/{activity:id}',[StudentController::class,'showActivity'])->name('studentShowActivity');
+    Route::post('/completeActivity/{activity:id}',[ActivitiesController::class,'completeActivity'])->name('completeActivity');
 });
 
 
@@ -51,11 +54,18 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function (){
     Route::get('/sendTicket',[AdminTicketsController::class,'createTicket'])->name('MessageAdmin');
     Route::post('/storeTicket',[AdminTicketsController::class,'storeTicket'])->name('SendTicket');
+    Route::get('/threads',[MessagesController::class,'index'])->name('ListThreads');
+    Route::get('/showThread/{thread:id}',[MessagesController::class,'show'])->name('ShowThread');
+    Route::get('/message/{user:id}',[MessagesController::class,'create'])->name('Message');    
+    Route::post('/message/{thread::id?}',[MessagesController::class,'store'])->name('StoreMessage');
+    Route::post('/threadUpdate/{thread:id}',[MessagesController::class,'update'])->name('UpdateThread');
+
+    Route::post('/classRoomChat/{classroom:id}',[MessagesController::class,'classroomChat'])->name('SendClasroomMessage');
 });
 
 
 Route::middleware('isAdmin')->group(function () {
-    Route::get('/adminTasks', [AdminUserController::class, 'tasks'])->name('AdminTasks');
+    Route::get('/adminTasks', [AdminTicketsController::class, 'tasks'])->name('AdminTasks');
     Route::get('/adminPanel', [AdminUserController::class, 'index'])->name('AdminPanel');
 
     Route::post('/addStudent', [AdminUserController::class, 'storeStudent'])->name('AddStudent');
@@ -72,6 +82,8 @@ Route::middleware('isAdmin')->group(function () {
     Route::patch('/assignTeacher/{classroom:id}', [AdminClassController::class, 'assignTeacher'])->name('AsTeacher');
 
     Route::get('/adminTickets',[AdminTicketsController::class,'index'])->name('AdminTickets');
+    Route::get('/solveTicket/{ticket:id}',[AdminTicketsController::class,'solveTicket'])->name('SolveTicket');
+    Route::patch('/solveTicket/{ticket:id}',[AdminTicketsController::class,'setTicketSolved'])->name('SetSolved');
 });
 
 Route::middleware('isTeacher')->group(

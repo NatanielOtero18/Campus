@@ -23,25 +23,22 @@ let { tickets } = defineProps({ tickets: Array })
                     class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 grid grid-cols-4 gap-4">
 
 
-                    <div class="flex flex-col p-4 gap-2 border border-gray-150 items-center justify-center text-2xl">
+                    <Link  :href="route('SolveTicket',ticket.id)" v-for="ticket in tickets" class="flex flex-col p-4 gap-2 border border-gray-150 items-center justify-center text-2xl">
 
 
                         <div class="flex gap-2">
-                            de: <p class="font-bold"></p>
+                            de: <p class="font-bold">{{ ticket.user.role.name }}</p>
                         </div>
                         <div class="flex gap-2">
-                            Asunto: <p class="font-bold"></p>
+                            Asunto: <p class="font-bold">{{ ticket.subject }}</p>
                         </div>
                         <div>
 
-                            <Link as="button"
-                                class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                            Resolver
-                            </Link>
+                          
 
                         </div>
 
-                    </div>
+                    </Link>
                 </div>
                 <div v-else class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 w-full">
                     No hay tickets pendientes...
